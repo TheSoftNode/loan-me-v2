@@ -218,15 +218,14 @@ const RegisterPage = () =>
     };
 
     return (
-        <div className="min-h-screen pt-14 bg-gradient-to-br  from-cyan-50 via-teal-50 to-emerald-50  flex items-center justify-center p-4">
+        <div className="min-h-screen lg:py-20  bg-gradient-to-br  from-cyan-50 via-teal-50 to-emerald-50  flex items-center justify-center p-4">
             <Toaster />
-            <div className="w-full max-w-md">
+            <div className="w-full sm:max-w-2xl lg:max-w-md">
                 <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200">
                     <h2 className="text-3xl font-bold text-teal-600 mb-6 text-center">Create Account</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* First Name and Last Name fields remain the same */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid sm:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-slate-600 text-sm font-medium">First Name</label>
                                 <div className="relative">
@@ -415,7 +414,7 @@ const RegisterPage = () =>
 
                         {/* Login Link */}
                         <Link
-                            href="/Login"
+                            href="/login"
                             className="w-full flex items-center justify-center text-slate-600 hover:text-cyan-500 transition-colors"
                         >
                             Already have an account?

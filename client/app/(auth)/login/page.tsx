@@ -42,7 +42,7 @@ const LoginPage: React.FC = () =>
 
     const validatePassword = (password: string) =>
     {
-        return password.length >= 6; 
+        return password.length >= 6;
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -86,12 +86,10 @@ const LoginPage: React.FC = () =>
         return Object.keys(newErrors).length === 0;
     };
 
-
-
     return (
-        <div className="min-h-screen pt-14 bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50 flex items-center justify-center p-4">
+        <div className="min-h-screen lg:py-20 bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50 flex items-center justify-center p-4">
             <Toaster />
-            <div className="w-full max-w-md">
+            <div className="w-full sm:max-w-2xl lg:max-w-xl xl:max-w-md">
                 <div className="bg-white rounded-2xl p-8 shadow-lg border border-teal-100">
                     <h2 className="text-3xl font-bold text-teal-600 mb-6 text-center">Welcome Back</h2>
 
@@ -226,7 +224,7 @@ const LoginPage: React.FC = () =>
                         </div>
 
                         <Link
-                            href="/Register"
+                            href="/signup"
                             className="w-full flex items-center justify-center text-slate-600 hover:text-teal-600 transition-colors mt-4"
                         >
                             Don&apos;t have an account?

@@ -5,12 +5,12 @@ import { Menu, ChevronDown, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import
-    {
-        DropdownMenu,
-        DropdownMenuContent,
-        DropdownMenuItem,
-        DropdownMenuTrigger,
-    } from "@/components/ui/dropdown-menu"
+{
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { User } from '@/lib/type';
 
 const Navbar = () =>
@@ -29,7 +29,7 @@ const Navbar = () =>
     const handleLogout = async () =>
     {
         // Implement your logout logic here
-        window.location.href = '/Login';
+        window.location.href = '/login';
     };
 
     const AuthSection = () =>
@@ -97,7 +97,7 @@ const Navbar = () =>
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <Link href="/Login">Login</Link>
+                    <Link href="/login">Login</Link>
                     <motion.span
                         className="absolute bottom-0 left-0 w-full h-0.5 bg-white/90 rounded-full"
                         initial={{ scaleX: 0 }}
@@ -111,7 +111,7 @@ const Navbar = () =>
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <Link href="/Register">Register</Link>
+                    <Link href="/signup">Register</Link>
                 </motion.button>
             </div>
         );
@@ -226,7 +226,7 @@ const Navbar = () =>
                             </div>
                         ) : (
                             <div className="border-t border-white/10 pt-2 pb-4 space-y-3">
-                                <Link href="/Login">
+                                <Link href="/login">
                                     <motion.button
                                         className="block w-full text-white relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg px-2 py-1"
                                         whileHover={{ x: 8 }}
@@ -236,7 +236,7 @@ const Navbar = () =>
                                     </motion.button>
                                 </Link>
 
-                                <Link href="/Register">
+                                <Link href="/signup">
                                     <motion.button
                                         className="block w-full bg-white text-cyan-600 px-4 py-2 rounded-full hover:bg-purple-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                                         whileHover={{ scale: 1.02 }}
