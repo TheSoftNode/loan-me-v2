@@ -14,7 +14,7 @@ const TrustSection: React.FC = () => {
       text: "4.8/5"
     },
     {
-      icon: <CheckCircle className="text-green-500" />,
+      icon: <CheckCircle className="text-purple-500" />,
       text: "Licensed Lender"
     },
     {
@@ -31,7 +31,7 @@ const TrustSection: React.FC = () => {
           <div className="flex flex-wrap justify-center gap-4">
             {trustIndicators.map((indicator, index) => (
               <div key={index} className="bg-white rounded-full px-6 py-3 shadow-md flex items-center space-x-2">
-                {indicator.prefix && <span className="text-yellow-400">{indicator.prefix}</span>}
+                {indicator.prefix && <span className="text-teal-900">{indicator.prefix}</span>}
                 {indicator.icon}
                 <span className="text-gray-700">{indicator.text}</span>
               </div>

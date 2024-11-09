@@ -118,7 +118,7 @@ const Navbar = () =>
     };
 
     return (
-        <nav className="fixed w-full top-0 z-50 bg-gradient-to-r from-cyan-600 to-purple-600 backdrop-blur-md">
+        <nav className="fixed w-full top-0 z-50 bg-gradient-to-r from-cyan-600 to-teal-600 backdrop-blur-md">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -133,7 +133,7 @@ const Navbar = () =>
                             whileHover={{ scale: 1.1 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <span className="text-cyan-600 font-bold text-xl">L</span>
+                            <span className="text-purple-700 font-bold text-xl">L</span>
                         </motion.a>
                         <span className="text-2xl font-bold text-white">LoanMe</span>
                     </motion.div>
@@ -176,7 +176,7 @@ const Navbar = () =>
 
                 {/* Mobile Menu */}
                 <motion.div
-                    className="md:hidden absolute top-16 left-0 right-0 bg-gradient-to-r from-cyan-600 to-purple-600 shadow-lg"
+                    className="md:hidden absolute top-16 left-0 right-0 bg-gradient-to-r from-cyan-600 to-teal-600 shadow-lg"
                     initial={{ opacity: 0, height: 0 }}
                     animate={{
                         opacity: isMenuOpen ? 1 : 0,
@@ -190,7 +190,7 @@ const Navbar = () =>
                             <motion.a
                                 key={item.name}
                                 href={item.path}
-                                className="block text-white relative overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg px-2 py-1"
+                                className="block text-white hover:!text-purple-600 relative overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg px-2 py-1"
                                 whileHover={{ x: 8 }}
                                 transition={{ duration: 0.2 }}
                             >
