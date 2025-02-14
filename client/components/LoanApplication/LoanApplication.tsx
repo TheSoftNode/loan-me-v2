@@ -18,7 +18,6 @@ import { ApplicationForm } from './ApplicationForm';
 import { ReviewApplication } from './ReviewApplication';
 import { Button } from '../ui/button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { CustomLoanBuilder } from './CustomLoanBuilder';
 
 interface LoanApplicationProps {
     loanTypes: LoanType[];
@@ -117,12 +116,6 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({ loanTypes, onSubmit }
                                                 onSelect={setSelectedLoan}
                                             />
                                         ))}
-                                        <CustomLoanBuilder
-                                            onCreateLoan={(customLoan) => {
-                                                setSelectedLoan(customLoan);
-                                                setStep(2);
-                                            }}
-                                        />
                                     </div>
                                 )}
 
