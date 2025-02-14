@@ -2,8 +2,7 @@ import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa6';
 
-const Footer = () =>
-{
+const Footer = () => {
     return (
         <footer className="bg-cyan-900 text-white">
             <div className="container mx-auto px-4 py-12">
@@ -41,28 +40,23 @@ const Footer = () =>
                         <h3 className="text-xl font-semibold">Quick Links</h3>
                         <ul className="space-y-3">
                             <li>
-                                <a href="#" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
+                                <a href="/about" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
                                     About Us
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
+                                <a href="how-it-works" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
                                     How It Works
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
+                                <a href="product" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
                                     Loan Products
                                 </a>
                             </li>
                             <li>
-                                <a href="/support" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
+                                <a href="/faq" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
                                     FAQ
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/Blog" className="text-gray-200 hover:text-cyan-400 transition-colors inline-block">
-                                    Blog
                                 </a>
                             </li>
                         </ul>
@@ -92,16 +86,16 @@ const Footer = () =>
                 <div className="border-t border-gray-800 pt-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                         <p className="text-gray-300 text-sm text-center md:text-left">
-                            © 2024 LoanMe. All rights reserved.
+                            © {new Date().getFullYear()} LoanMe. All rights reserved.
                         </p>
                         <div className="flex flex-wrap justify-center md:justify-end gap-6">
-                            <a href="/PrivacyPolicy" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
+                            <a href="/privacy-policy" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                                 Privacy Policy
                             </a>
-                            <a href="/TermsOfService" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
+                            <a href="/service-terms" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                                 Terms of Service
                             </a>
-                            <a href="/LoanAgreement" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
+                            <a href="/loan-agreement" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                                 Loan Agreement
                             </a>
                         </div>

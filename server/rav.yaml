@@ -1,0 +1,21 @@
+scripts:
+  createapp:
+    - cd loanapp && python manage.py startapp
+  static:
+    - cd loanapp && python manage.py collectstatic
+  check:
+    - pip freeze
+  install:
+    - pip install -r requirements.txt
+  server:
+    - cd loanapp && python manage.py runserver 8001
+  makemigrations:
+    - cd loanapp && python manage.py makemigrations
+  migrate:
+    - cd loanapp && python manage.py migrate
+  get-db-tables:
+    - cd loanapp && python manage.py inspectdb > api/models.py
+  shell:
+    - cd loanapp && python manage.py shell
+  
+  

@@ -55,7 +55,7 @@ const HeroSection = () =>
 
                         {/* CTA Section */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 animate-fade-in pt-2">
-                            <Link href="/Dashboard" className="w-full sm:w-auto">
+                            <Link href="/apply" className="w-full sm:w-auto">
                                 <button className="group bg-gradient-to-r from-cyan-600 to-teal-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold inline-flex items-center justify-center hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto">
                                     Start Your Application
                                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />

@@ -1,5 +1,4 @@
-export interface LoanType
-{
+export interface LoanType {
     id: string;
     name: string;
     description: string;
@@ -12,8 +11,7 @@ export interface LoanType
     features: string[];
 }
 
-export interface FormDataType
-{
+export interface FormDataType {
     amount: string;
     term: string;
     purpose: string;
@@ -29,31 +27,27 @@ export interface FormDataType
 
 import { ReactElement } from 'react';
 
-export interface FAQ
-{
+export interface FAQ {
     id: string;
     question: string;
     answer: string;
 }
 
-export interface FAQCategory
-{
+export interface FAQCategory {
     id: string;
     name: string;
     icon: ReactElement;
     questions: FAQ[];
 }
 
-export interface FeedbackFormData
-{
+export interface FeedbackFormData {
     rating: number;
     category: string;
     comment: string;
 }
 
 
-export interface User
-{
+export interface User {
     firstName: string;
     lastName: string;
     email: string;
@@ -66,8 +60,7 @@ export interface User
     acceptedTerms?: boolean;
 }
 
-export interface UserProfile
-{
+export interface UserProfile {
     firstName: string;
     lastName: string;
     email: string;
@@ -77,4 +70,38 @@ export interface UserProfile
     createdAt: string;
     lastLogin: string;
     acceptedTerms: boolean;
+}
+
+export interface LoanDetails {
+    loanId: string;
+    amount: number;
+    status: 'active' | 'pending' | 'completed';
+    disbursedAmount: number;
+    remainingBalance: number;
+    totalPaid: number;
+    nextPaymentDate: string;
+    nextPaymentAmount: number;
+    interestRate: number;
+    term: number;
+    completedTerms: number;
+}
+
+export interface Transaction {
+    id: string;
+    date: string;
+    type: 'payment' | 'disbursement' | 'refund';
+    amount: number;
+    status: 'completed' | 'pending' | 'failed';
+    method: string;
+    reference: string;
+    description?: string;
+}
+
+export interface Notification {
+    id: string;
+    type: 'payment' | 'promotion' | 'status';
+    title: string;
+    message: string;
+    time: string;
+    priority: 'high' | 'medium' | 'low';
 }
