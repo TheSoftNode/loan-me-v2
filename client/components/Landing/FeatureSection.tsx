@@ -2,8 +2,7 @@ import React from 'react';
 import { Clock, Shield, DollarSign } from 'lucide-react';
 import FeatureCard from './FeatureCard';
 
-const FeaturesSection: React.FC = () =>
-{
+const FeaturesSection: React.FC = () => {
     const features: FeatureProps[] = [
         {
             icon: <Clock />,
@@ -26,7 +25,7 @@ const FeaturesSection: React.FC = () =>
     ];
 
     return (
-        <section className="py-16 bg-white/50">
+        <section className="py-8 sm:py-12 bg-white/50">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {features.map((feature, index) => (

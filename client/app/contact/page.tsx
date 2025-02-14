@@ -83,10 +83,10 @@ function ContactPage() {
                         Get in Touch
                     </motion.div>
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
-                        Let's Connect
+                        Let&apos;s Connect
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Have questions? We're here to help. Choose your preferred way to reach us below.
+                        Have questions? We&apos;re here to help. Choose your preferred way to reach us below.
                     </p>
                 </motion.div>
 
@@ -268,7 +268,7 @@ function ContactPage() {
                                                     <Alert className="bg-green-50 text-green-800 border-green-200">
                                                         <CheckCircle2 className="h-4 w-4" />
                                                         <AlertDescription>
-                                                            Message sent successfully! We'll get back to you soon.
+                                                            Message sent successfully! We&apos;ll get back to you soon.
                                                         </AlertDescription>
                                                     </Alert>
                                                 </motion.div>

@@ -54,7 +54,7 @@ const ResetPasswordPage: React.FC = () => {
                             <Alert className="bg-teal-50 border-teal-100 text-teal-700">
                                 <AlertCircle className="h-4 w-4" />
                                 <AlertDescription>
-                                    Enter your email address and we'll send you a code to reset your password.
+                                    Enter your email address and we&apos;ll send you a code to reset your password.
                                 </AlertDescription>
                             </Alert>
                             <div className="space-y-2">

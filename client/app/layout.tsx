@@ -24,15 +24,16 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>)
-{
+}>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[500px]`}
       >
         <Navbar />
-        {children}
+        <main className="mt-10">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

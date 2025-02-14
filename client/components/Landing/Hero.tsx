@@ -2,8 +2,7 @@ import React from 'react';
 import { ArrowRight, ChevronRight, Star, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 
-const HeroSection = () =>
-{
+const HeroSection = () => {
     const benefits = [
         "Decision in under 3 minutes",
         "Tailored rates based on your profile",
@@ -11,7 +10,7 @@ const HeroSection = () =>
     ];
 
     return (
-        <section className="relative pt-20 sm:pt-12 lg:pt-16 min-h-[500px] lg:min-h-[500px] flex justify-center items-center pb-6 sm:pb-8 lg:pb-4 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <section className="relative  min-h-[500px] lg:min-h-[500px] flex justify-center items-center pb-4 sm:pb-6 lg:pb-4 px-4 sm:px-6 lg:px-8 overflow-hidden">
             {/* Rest of the code remains exactly the same... */}
             <div className="absolute hidden sm:block inset-0 -z-10">
                 <div className="absolute top-0 left-1/4 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-cyan-600/10 rounded-full blur-[100px] animate-pulse" />

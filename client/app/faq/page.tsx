@@ -176,8 +176,8 @@ const FAQPage = () => {
               key={category.id}
               variants={itemVariants}
               className={`p-4 rounded-xl border transition-all duration-300 ${activeCategory === category.id
-                  ? 'border-teal-500 bg-teal-50'
-                  : 'border-gray-200 hover:border-teal-500 hover:bg-gray-50'
+                ? 'border-teal-500 bg-teal-50'
+                : 'border-gray-200 hover:border-teal-500 hover:bg-gray-50'
                 }`}
               onClick={() => setActiveCategory(category.id)}
             >
@@ -254,7 +254,7 @@ const FAQPage = () => {
               Still Have Questions?
             </h2>
             <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              Can't find what you're looking for? Our support team is here to help.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button

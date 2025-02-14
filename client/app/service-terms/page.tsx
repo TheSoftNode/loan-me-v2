@@ -72,7 +72,7 @@ const TermsOfServicePage = () => {
                         Terms of Service
                     </h1>
                     <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        Please read these terms carefully before using our services. These terms establish your rights, obligations, and the conditions for using LoanMe's services.
+                        Please read these terms carefully before using our services. These terms establish your rights, obligations, and the conditions for using LoanMe&apos;s services.
                     </p>
                 </motion.div>
 
@@ -120,7 +120,7 @@ const TermsOfServicePage = () => {
                             <h2 className="text-2xl font-semibold text-gray-800">Acceptance of Terms</h2>
                         </div>
                         <p className="text-gray-600 leading-relaxed">
-                            By accessing or using LoanMe's services, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using our services.
+                            By accessing or using LoanMe&apos;s services, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using our services.
                         </p>
                     </motion.section>
 
