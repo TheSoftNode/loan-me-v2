@@ -183,7 +183,7 @@ const VerifyEmailPage: React.FC = () => {
                                 className="w-full flex items-center justify-center space-x-2 text-teal-600 hover:text-teal-700 transition-colors py-2"
                             >
                                 <RefreshCw className="h-4 w-4" />
-                                <span>Didn't receive a code?</span>
+                                <span>Didn&apos;t receive a code?</span>
                             </button>
 
                             <button

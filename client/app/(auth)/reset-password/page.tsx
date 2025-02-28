@@ -79,7 +79,7 @@ export default function PasswordReset() {
                     <Alert className="bg-teal-50 border-teal-100 text-teal-700 mb-6">
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription>
-                            Please enter your new password below. Make sure it's at least 8 characters long.
+                            Please enter your new password below. Make sure it&apos;s at least 8 characters long.
                         </AlertDescription>
                     </Alert>
 
