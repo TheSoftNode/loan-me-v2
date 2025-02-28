@@ -53,6 +53,7 @@ signup_auto_schema = swagger_auto_schema(
             type=openapi.TYPE_OBJECT,
             properties={
                 'access': openapi.Schema(type=openapi.TYPE_STRING, description='Access token'),
+                'refresh': openapi.Schema(type=openapi.TYPE_STRING, description="Refresh token"),
                 'user': openapi.Schema(type=openapi.TYPE_OBJECT, properties=user_properties),
                 'message': openapi.Schema(type=openapi.TYPE_STRING, description='Verification instructions'),
             }
@@ -161,6 +162,7 @@ login_auto_schema = swagger_auto_schema(
             properties={
                 'status': openapi.Schema(type=openapi.TYPE_STRING, description='Status of the request'),
                 'access': openapi.Schema(type=openapi.TYPE_STRING, description='Access token'),
+                'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='Refresh token'),
                 'user': openapi.Schema(type=openapi.TYPE_OBJECT, properties=user_properties),
                 'warning': openapi.Schema(type=openapi.TYPE_STRING, description='Account verification status'),
             }
@@ -231,6 +233,7 @@ token_refresh_auto_schema = swagger_auto_schema(
         required=['access_token'],
         properties={
             'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Expired access token'),
+            'refresh_token': openapi.Schema(type=openapi.TYPE_STRING, description='Valid refresh token'),
         }
     ),
     responses={

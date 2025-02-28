@@ -38,11 +38,17 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('confirm_password')
         password = validated_data.pop('password')
+
+        if self.context.get('is_first_user'):
+            validated_data['role'] = 'admin'
+            validated_data['is_staff'] = True
+            validated_data['is_superuser'] = True
+
         user = CustomUser(**validated_data)
         user.set_password(password)
         user.save()
         # Send verification email
-        user.send_verification_email()
+        # user.send_verification_email()
         return user
 
 class VerificationSerializer(serializers.Serializer):

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Menu, ChevronDown, LogOut, Home, Info, Package, Phone, UserIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import {
     DropdownMenu,
@@ -11,11 +12,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { User } from '@/lib/type';
+import { useRouter } from 'next/navigation';
+import { useGetUserDetailsQuery, useLogoutMutation } from '@/src/service/queries/authApi';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
+    const { data: userData, isLoading } = useGetUserDetailsQuery();
+    const [logout] = useLogoutMutation();
 
     const navs = [
         { name: 'Home', path: '/', icon: <Home className="w-4 h-4" /> },
@@ -25,18 +30,32 @@ const Navbar = () => {
     ];
 
     const handleLogout = async () => {
-        // Implement your logout logic here
-        window.location.href = '/login';
+        try {
+            await logout().unwrap();
+            // Clear any stored data
+            Cookies.remove('access_token');
+            localStorage.removeItem('rememberedEmail');
+
+            toast.success('Logged out successfully');
+            router.push('/login');
+        } catch (error: any) {
+            toast.error(error?.data?.error || 'Failed to logout');
+        }
     };
 
     const AuthSection = () => {
-        if (loading) {
+        if (isLoading) {
             return (
                 <div className="h-10 w-28 bg-white/10 animate-pulse rounded-xl" />
             );
         }
 
-        if (user) {
+        if (userData) {
+            const getInitials = () => {
+                const firstInitial = userData.first_name?.charAt(0) || '';
+                const lastInitial = userData.last_name?.charAt(0) || '';
+                return (firstInitial + lastInitial).toUpperCase();
+            };
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -46,21 +65,14 @@ const Navbar = () => {
                             whileTap={{ scale: 0.98 }}
                         >
                             <div className="relative w-8 h-8 rounded-lg overflow-hidden">
-                                {user?.photoURL ? (
-                                    <img
-                                        src={user?.photoURL}
-                                        alt={user?.firstName}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
-                                        <span className="text-white text-sm font-medium">
-                                            {user.firstName?.charAt(0).toUpperCase()}
-                                        </span>
-                                    </div>
-                                )}
+                                <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
+                                    <span className="text-white text-sm font-medium">
+                                        {getInitials()}
+                                        {/* {userData.first_name?.charAt(0).toUpperCase()} */}
+                                    </span>
+                                </div>
                             </div>
-                            <span className="text-white font-medium">{user.firstName}</span>
+                            <span className="text-white font-medium hidden md:block">{userData.first_name}</span>
                             <ChevronDown className="w-4 h-4 text-white/70" />
                         </motion.button>
                     </DropdownMenuTrigger>
@@ -71,7 +83,7 @@ const Navbar = () => {
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer focus:bg-gray-100">
-                            <Link href="/user-dashboard" className="flex items-center w-full">
+                            <Link href="/dashboard" className="flex items-center w-full">
                                 Go to dashboard
                             </Link>
                         </DropdownMenuItem>
@@ -115,6 +127,9 @@ const Navbar = () => {
             </div>
         );
     };
+
+
+
 
     return (
         <nav className="fixed w-full top-0 z-50 bg-gradient-to-r from-cyan-600 to-teal-600 shadow-lg shadow-cyan-900/10 backdrop-blur-md">
@@ -202,7 +217,7 @@ const Navbar = () => {
                                         <span>{item.name}</span>
                                     </motion.a>
                                 ))}
-                                {user ? (
+                                {userData ? (
                                     <div className="border-t border-white/10 pt-4 space-y-4">
                                         <Link href="/profile">
                                             <motion.button
@@ -257,6 +272,6 @@ const Navbar = () => {
             </div>
         </nav>
     );
-};
+}
 
 export default Navbar;

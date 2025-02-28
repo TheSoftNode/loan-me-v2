@@ -1,33 +1,30 @@
 "use client"
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { ArrowRight, Mail, Lock, Fingerprint, Eye, EyeOff } from 'lucide-react';
 import { FaGoogle } from 'react-icons/fa6';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
-import { PasswordSetupModal } from '@/components/Password/PasswordSetupModal';
+import toast from 'react-hot-toast';
+import { useLoginMutation } from '@/src/service/queries/authApi';
 
-interface LoginFormData
-{
+interface LoginFormData {
     email: string;
     password: string;
     rememberMe: boolean;
 }
 
-interface FormErrors
-{
+interface FormErrors {
     email?: string;
     password?: string;
 }
 
-const LoginPage: React.FC = () =>
-{
+const LoginPage: React.FC = () => {
     const router = useRouter();
+    const [login, { isLoading }] = useLoginMutation();
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
-    const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+
     const [formData, setFormData] = useState<LoginFormData>({
         email: '',
         password: '',
@@ -35,18 +32,27 @@ const LoginPage: React.FC = () =>
     });
     const [errors, setErrors] = useState<FormErrors>({});
 
-    const validateEmail = (email: string) =>
-    {
+    // Check for remembered email on mount
+    useEffect(() => {
+        const rememberedEmail = localStorage.getItem('rememberedEmail');
+        if (rememberedEmail) {
+            setFormData(prev => ({
+                ...prev,
+                email: rememberedEmail,
+                rememberMe: true
+            }));
+        }
+    }, []);
+
+    const validateEmail = (email: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
-    const validatePassword = (password: string) =>
-    {
+    const validatePassword = (password: string) => {
         return password.length >= 6;
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
-    {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { name, value, type, checked } = e.target;
         const inputValue = type === 'checkbox' ? checked : value;
 
@@ -55,30 +61,24 @@ const LoginPage: React.FC = () =>
             [name]: inputValue
         }));
 
-        // Clear error when user starts typing
         setErrors(prev => ({
             ...prev,
             [name]: undefined
         }));
     };
 
-    const validateForm = () =>
-    {
+    const validateForm = () => {
         const newErrors: FormErrors = {};
 
-        if (!formData.email)
-        {
+        if (!formData.email) {
             newErrors.email = 'Email is required';
-        } else if (!validateEmail(formData.email))
-        {
+        } else if (!validateEmail(formData.email)) {
             newErrors.email = 'Please enter a valid email address';
         }
 
-        if (!formData.password)
-        {
+        if (!formData.password) {
             newErrors.password = 'Password is required';
-        } else if (!validatePassword(formData.password))
-        {
+        } else if (!validatePassword(formData.password)) {
             newErrors.password = 'Password must be at least 6 characters';
         }
 
@@ -86,14 +86,60 @@ const LoginPage: React.FC = () =>
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        try {
+            const response = await login({
+                email: formData.email,
+                password: formData.password
+            }).unwrap();
+
+            // Handle remember me
+            if (formData.rememberMe) {
+                localStorage.setItem('rememberedEmail', formData.email);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+
+            // Check if email is verified
+            if (!response.user.is_verified) {
+                router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+                toast.error('Please verify your email to continue');
+                return;
+            }
+
+            toast.success('Login successful!');
+            router.push('/profile');
+
+        } catch (error: any) {
+            const errorMessage = error?.data?.error || 'Failed to login';
+            toast.error(errorMessage);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        setIsGoogleLoading(true);
+        try {
+            toast.error('Google login not implemented yet');
+        } catch (error) {
+            toast.error('Google login failed');
+        } finally {
+            setIsGoogleLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen lg:py-20 bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50 flex items-center justify-center p-4">
-            <Toaster />
             <div className="w-full sm:max-w-2xl lg:max-w-xl xl:max-w-md">
                 <div className="bg-white rounded-2xl p-8 shadow-lg border border-teal-100">
                     <h2 className="text-3xl font-bold text-teal-600 mb-6 text-center">Welcome Back</h2>
 
-                    <form className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-slate-600 text-sm font-medium">Email</label>
                             <div className="relative">
@@ -144,7 +190,6 @@ const LoginPage: React.FC = () =>
                         <button
                             type="button"
                             className="w-full md:hidden bg-teal-50 border border-teal-200 rounded-lg px-4 py-2 text-teal-700 flex items-center justify-center gap-2 hover:bg-teal-100 transition-colors"
-
                         >
                             <Fingerprint className="h-5 w-5" />
                             Use Passwordless Login
@@ -162,7 +207,7 @@ const LoginPage: React.FC = () =>
                                 Remember me
                             </label>
                             <Link
-                                href="/ResetPassword"
+                                href="/request-password-reset"
                                 className="text-sm text-teal-600 hover:text-teal-700 transition-colors"
                             >
                                 Forgot password?
@@ -198,7 +243,7 @@ const LoginPage: React.FC = () =>
                         <div className="grid grid-cols-1 gap-3">
                             <button
                                 type="button"
-
+                                onClick={handleGoogleLogin}
                                 className="flex items-center justify-center py-2 px-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors gap-2"
                                 disabled={isGoogleLoading}
                             >
@@ -211,16 +256,6 @@ const LoginPage: React.FC = () =>
                                     </>
                                 )}
                             </button>
-
-                            <PasswordSetupModal
-                                isOpen={showPasswordSetup}
-                                onClose={() => setShowPasswordSetup(false)}
-                                onSuccess={() =>
-                                {
-                                    toast.success('Password setup successful!');
-                                    router.push('/Dashboard');
-                                }}
-                            />
                         </div>
 
                         <Link

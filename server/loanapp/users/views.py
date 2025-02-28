@@ -37,9 +37,19 @@ def signup(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        serializer = UserSerializer(data=request.data)
+        is_first_user = CustomUser.objects.count() == 0
+        
+        # Prepare data for serializer
+        data = request.data.copy()
+        if is_first_user:
+            data['role'] = 'admin'  # Add role to the data
+        
+        serializer = UserSerializer(data=data, context={'is_first_user': is_first_user})
+        
+        # serializer = UserSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         user = serializer.save()
 
@@ -63,6 +73,7 @@ def signup(request):
             return Response({
                 'status': 'success',
                 'access': access_token,
+                'refresh': refresh_token,
                 'user': UserSerializer(user).data,
                 'message': 'Please check your email for verification code'
             }, status=status.HTTP_201_CREATED)
@@ -110,6 +121,12 @@ def resend_verification(request):
 
     try:
         user = CustomUser.objects.get(email=email)
+
+        if not user:
+            return Response(
+                {'error': "A user with this email does not exist"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
         if user.is_verified:
             return Response(
@@ -173,6 +190,7 @@ def login(request):
         return Response({
             'status': 'success',
             'access': access_token,
+            'refresh': refresh_token,
             'user': UserSerializer(user).data,
             'warning': warning
         })
@@ -265,45 +283,92 @@ def me(request):
             {'error': str(e)},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+    
 @schemas.token_refresh_auto_schema
 @api_view(['POST'])
 def token_refresh(request):
     try:
-        expired_access_token = request.data.get('access_token')
-        if not expired_access_token:
+        access_token = request.data.get('access_token')
+        # refresh_token = request.data.get('refresh_token')
+
+        if not access_token:
             return Response(
-                {'error': 'Access token is required'},
+                {'error': 'Both access_token and refresh_token are required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Find the token pair
         refresh_token_obj = RefreshUserToken.objects.filter(
-            access_token=expired_access_token,
+            access_token=access_token,
+            # token=refresh_token,
             revoked=False,
             expires_at__gt=timezone.now()
         ).first()
 
         if not refresh_token_obj:
             return Response(
-                {'error': 'No valid refresh token found'},
+                {'error': 'Invalid token pair'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Generate new access token
         refresh = RefreshToken(refresh_token_obj.token)
         new_access_token = str(refresh.access_token)
 
-        # Update stored token
+        # Update stored token pair
         refresh_token_obj.access_token = new_access_token
         refresh_token_obj.expires_at = timezone.now() + refresh.lifetime
         refresh_token_obj.save()
 
-        return Response({'access': new_access_token})
+        return Response({
+            'access': new_access_token,
+            'message': 'Token refreshed successfully'
+        })
 
     except Exception as e:
         return Response(
             {'error': str(e)},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+# @schemas.token_refresh_auto_schema
+# @api_view(['POST'])
+# def token_refresh(request):
+#     try:
+#         expired_access_token = request.data.get('access_token')
+#         if not expired_access_token:
+#             return Response(
+#                 {'error': 'Access token is required'},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         refresh_token_obj = RefreshUserToken.objects.filter(
+#             access_token=expired_access_token,
+#             revoked=False,
+#             expires_at__gt=timezone.now()
+#         ).first()
+
+#         if not refresh_token_obj:
+#             return Response(
+#                 {'error': 'No valid refresh token found'},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         refresh = RefreshToken(refresh_token_obj.token)
+#         new_access_token = str(refresh.access_token)
+
+#         # Update stored token
+#         refresh_token_obj.access_token = new_access_token
+#         refresh_token_obj.expires_at = timezone.now() + refresh.lifetime
+#         refresh_token_obj.save()
+
+#         return Response({'access': new_access_token})
+
+#     except Exception as e:
+#         return Response(
+#             {'error': str(e)},
+#             status=status.HTTP_400_BAD_REQUEST
+#         )
     
 
 

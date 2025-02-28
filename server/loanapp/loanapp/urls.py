@@ -24,9 +24,9 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Easmark API",
+        title="Monicy Global Limited API",
         default_version='v1',
-        description="API for managing Easmark AI Grading system",
+        description="API for managing Monicy Global Limited Loan app",
         terms_of_service="https://www.yourapp.com/terms/",
         contact=openapi.Contact(email="info@hitoal.ai"),
         license=openapi.License(name="BSD License"),

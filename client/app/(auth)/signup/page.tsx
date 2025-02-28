@@ -5,9 +5,11 @@ import { User, Mail, Lock, Check, X, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { useSignupMutation } from '@/src/service/queries/authApi';
+import { SignupRequest } from '@/src/types/auth';
 
-interface FormErrors
-{
+
+interface FormErrors {
     firstName?: string;
     lastName?: string;
     email?: string;
@@ -15,8 +17,7 @@ interface FormErrors
     confirmPassword?: string;
 }
 
-interface PasswordStrength
-{
+interface PasswordStrength {
     score: number;
     requirements: {
         length: boolean;
@@ -27,9 +28,8 @@ interface PasswordStrength
     };
 }
 
-const RegisterPage = () =>
-{
-    const [isLoading, setIsLoading] = useState(false);
+const RegisterPage = () => {
+    const [signup, { isLoading: isSignupLoading }] = useSignupMutation();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -53,13 +53,11 @@ const RegisterPage = () =>
     });
     const router = useRouter();
 
-    const validateEmail = (email: string) =>
-    {
+    const validateEmail = (email: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
-    const checkPasswordStrength = (password: string) =>
-    {
+    const checkPasswordStrength = (password: string) => {
         const requirements = {
             length: password.length >= 8,
             uppercase: /[A-Z]/.test(password),
@@ -73,8 +71,7 @@ const RegisterPage = () =>
         return score;
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
         const inputValue = type === 'checkbox' ? checked : value;
 
@@ -88,27 +85,22 @@ const RegisterPage = () =>
             [name]: undefined
         }));
 
-        if (name === 'password')
-        {
+        if (name === 'password') {
             checkPasswordStrength(value);
         }
 
-        if (name === 'confirmPassword' || (name === 'password' && formData.confirmPassword))
-        {
-            if (name === 'confirmPassword' && value !== formData.password)
-            {
+        if (name === 'confirmPassword' || (name === 'password' && formData.confirmPassword)) {
+            if (name === 'confirmPassword' && value !== formData.password) {
                 setErrors(prev => ({
                     ...prev,
                     confirmPassword: 'Passwords do not match'
                 }));
-            } else if (name === 'password' && value !== formData.confirmPassword)
-            {
+            } else if (name === 'password' && value !== formData.confirmPassword) {
                 setErrors(prev => ({
                     ...prev,
                     confirmPassword: 'Passwords do not match'
                 }));
-            } else
-            {
+            } else {
                 setErrors(prev => ({
                     ...prev,
                     confirmPassword: undefined
@@ -117,34 +109,26 @@ const RegisterPage = () =>
         }
     };
 
-    const validateForm = () =>
-    {
+    const validateForm = () => {
         const newErrors: FormErrors = {};
 
-        if (!formData.firstName.trim())
-        {
+        if (!formData.firstName.trim()) {
             newErrors.firstName = 'First name is required';
         }
-        if (!formData.lastName.trim())
-        {
+        if (!formData.lastName.trim()) {
             newErrors.lastName = 'Last name is required';
         }
-        if (!formData.email.trim())
-        {
+        if (!formData.email.trim()) {
             newErrors.email = 'Email is required';
-        } else if (!validateEmail(formData.email))
-        {
+        } else if (!validateEmail(formData.email)) {
             newErrors.email = 'Invalid email format';
         }
-        if (!formData.password)
-        {
+        if (!formData.password) {
             newErrors.password = 'Password is required';
-        } else if (passwordStrength.score < 5)
-        {
+        } else if (passwordStrength.score < 5) {
             newErrors.password = 'Password does not meet all requirements';
         }
-        if (formData.password !== formData.confirmPassword)
-        {
+        if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match';
         }
 
@@ -152,64 +136,78 @@ const RegisterPage = () =>
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e: FormEvent) =>
-    {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!validateForm())
-        {
-            toast.error('Please fix the errors in the form');
+        // Validate form
+        if (!validateForm()) {
+            // Show all validation errors at once
+            Object.values(errors).forEach(error => {
+                if (error) toast.error(error);
+            });
             return;
         }
 
-        setIsLoading(true);
+        if (!formData.termsAccepted) {
+            toast.error('Please accept the terms and conditions');
+            return;
+        }
 
-        try
-        {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    email: formData.email,
-                    password: formData.password,
-                    acceptedTerms: formData.termsAccepted,
-                }),
+        // Show loading toast
+        const loadingToast = toast.loading('Creating your account...');
+
+        try {
+            const signupData: SignupRequest = {
+                email: formData.email,
+                password: formData.password,
+                confirm_password: formData.confirmPassword,
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                terms_accepted: formData.termsAccepted
+            };
+
+            const response = await signup(signupData).unwrap();
+
+            // Dismiss loading toast
+            toast.dismiss(loadingToast);
+
+            // Success toast
+            toast.success('Account created successfully!');
+
+            // Show verification email reminder
+            toast('Please check your email for verification', {
+                icon: '📧',
+                duration: 5000,
             });
 
-            const data = await response.json();
+            // Handle redirection
+            setTimeout(() => {
+                router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+            }, 3000);
 
-            if (!response.ok)
-            {
-                throw new Error(data.message || 'Something went wrong');
+        } catch (error: any) {
+            // Dismiss loading toast
+            toast.dismiss(loadingToast);
+
+            // Handle API errors
+            if (error?.data?.error) {
+                toast.error(error.data.error);
+            } else if (error?.status === 503) {
+                toast.error('Email service is currently unavailable. Please try again later.');
+            } else if (error?.status === 401 || error?.status === 403) {
+                toast.error('Authorization error. Please try again.');
+            } else if (error?.status === 429) {
+                toast.error('Too many attempts. Please try again later.');
+            } else {
+                toast.error('Failed to create account. Please try again.');
             }
-
-            toast.success('Account created successfully! Redirecting to login...', {
-                duration: 4000,
-            });
-
-            setTimeout(() =>
-            {
-                router.push('/Login');
-            }, 2000);
-
-        } catch (error)
-        {
-            toast.error(error instanceof Error ? error.message : 'Failed to create account');
-        } finally
-        {
-            setIsLoading(false);
         }
     };
 
-    const getPasswordStrengthColor = () =>
-    {
+
+    const getPasswordStrengthColor = () => {
         // Only return green if all requirements are met
-        if (passwordStrength.score === 5)
-        {
+        if (passwordStrength.score === 5) {
             return 'bg-green-500';
         }
         // Return different colors based on progress
@@ -219,7 +217,6 @@ const RegisterPage = () =>
 
     return (
         <div className="min-h-screen lg:py-20  bg-gradient-to-br  from-cyan-50 via-teal-50 to-emerald-50  flex items-center justify-center p-4">
-            <Toaster />
             <div className="w-full sm:max-w-2xl lg:max-w-md">
                 <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200">
                     <h2 className="text-3xl font-bold text-teal-600 mb-6 text-center">Create Account</h2>
@@ -403,9 +400,9 @@ const RegisterPage = () =>
                         <button
                             type="submit"
                             className="w-full bg-teal-500 text-white py-2 rounded-lg font-semibold hover:bg-teal-600 transition-colors flex items-center justify-center"
-                            disabled={isLoading}
+                            disabled={isSignupLoading}
                         >
-                            {isLoading ? (
+                            {isSignupLoading ? (
                                 <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
                                 'Create Account'
